@@ -1,5 +1,9 @@
 package com.nissho.vn.dao;
 
-public class CategoryDao {
+import java.util.List;
 
+import com.nissho.vn.model.Category;
+
+public interface CategoryDao {
+	List<Category> getAllCategories();
 }

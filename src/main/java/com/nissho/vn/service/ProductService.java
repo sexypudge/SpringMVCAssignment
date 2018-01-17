@@ -6,4 +6,5 @@ import com.nissho.vn.model.Product;
 
 public interface ProductService {
 	List<Product> getAllProducts();
+	Product findOne(String code);
 }

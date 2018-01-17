@@ -20,4 +20,8 @@ public class ProductServiceImpl implements ProductService {
 		return productDao.getAllProducts();
 	}
 
+	public Product findOne(String code) {
+		return productDao.findOne(code);
+	}
+
 }
