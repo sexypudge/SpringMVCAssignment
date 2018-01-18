@@ -7,4 +7,6 @@ import com.nissho.vn.model.Product;
 public interface ProductDao {
 	List<Product> getAllProducts();
 	Product findOne(String code);
+	List<Product> getProductByCtgCode(String code);
+	
 }

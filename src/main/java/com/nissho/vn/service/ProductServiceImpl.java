@@ -24,4 +24,9 @@ public class ProductServiceImpl implements ProductService {
 		return productDao.findOne(code);
 	}
 
+	@Override
+	public List<Product> getProductByCtgCode(String ctgCode) {
+		return productDao.getProductByCtgCode(ctgCode);
+	}
+
 }

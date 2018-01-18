@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib uri="/WEB-INF/luongnv.tld" prefix="fnc" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <script
@@ -93,8 +94,24 @@ function click_sub(productCode){
 				<div class="form-group">
 					<div class="col-sm-3"></div>
 					<a class="btn" href="${rc.getContextPath()}/">Back</a>
-					<button class="btn btn-primary" type="submit" onclick="click_sub(${product.productCode})">
-						Add to Cart</button>
+					<c:choose>
+						<c:when test="${not empty listProductIdOrdered}">
+							<c:if test="${  fnc:contains( listProductIdOrdered, product.productCode ) }">
+								<button class="btn btn-primary" type="submit" onclick="click_sub(${product.productCode})">
+									Add to Cart
+								</button>
+							</c:if>
+							<c:if test="${  fnc:contains( listProductIdOrdered, product.productCode ) eq false }">  
+								<button class="btn btn-primary"  disabled>Add to Cart</button>
+							</c:if>
+						</c:when>
+						<c:otherwise>
+							<button class="btn btn-primary" type="submit" onclick="click_sub(${product.productCode})">
+								Add to Cart
+							</button>
+						</c:otherwise>
+					</c:choose>					
+					
 				</div>
 			</div>
 		</form>

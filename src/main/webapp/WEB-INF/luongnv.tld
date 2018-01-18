@@ -2,7 +2,7 @@
     <tlib-version>1.0</tlib-version>
     <function>
         <name>contains</name>
-        <function-class>com.nissho.vn.tld.Contains</function-class>
+        <function-class>com.nissho.vn.funct.Contains</function-class>
         <function-signature>boolean contains(java.util.List,java.lang.Object)
         </function-signature>
     </function>

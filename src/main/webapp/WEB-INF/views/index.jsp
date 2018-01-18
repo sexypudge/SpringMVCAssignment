@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
-<%@ taglib uri="/WEB-INF/function.tld" prefix="fnc" %>
+<%@ taglib uri="/WEB-INF/luongnv.tld" prefix="fnc" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -22,17 +22,21 @@
 
 		<div class="form-horizontal" style="margin-top: 50px;">
 			<div class="form-group">
-				<label class="control-label col-sm-3 text-left"> Danh mục
-					sản phẩm </label>
+				<label class="control-label col-sm-3 text-left"> Danh mục sản phẩm </label>
 				<div class="col-sm-3">
-					<select class="form-control">
-						<option value="0">-- All --</option>
+					<select class="form-control" id="filter">
+						<option></option>
 						<c:if test="${not empty listCategories}">
 							<c:forEach items="${listCategories}" var="cate">
-								<option value="${cate.ctgCode}">${cate.ctgName}</option>
+								<option value="${cate.ctgCode}" ${ctgCode == cate.ctgCode ? 'selected' : ''}>${cate.ctgName}</option>
 							</c:forEach>
 						</c:if>
 					</select>
+				</div>
+				<div class="col-sm-3" style="text-align: center;">
+					<button class="btn btn-primary" onclick="location.href = '${rc.getContextPath()}/checkoutCart'" ${not empty listProductIdOrdered ? '' : 'disabled' }>
+					 	(${empty listProductIdOrdered ? 0 : listProductIdOrdered.size()}) Check out
+					 </button>
 				</div>
 			</div>
 
@@ -54,27 +58,32 @@
 							<c:forEach items="${listProducts}" var="prod">
 								<tr>
 									<td style="text-align: center;">${prod.productName}</td>
-									<td><c:if test="${not empty listCategories}">
+									<td>
+										<c:if test="${not empty listCategories}">
 											<c:forEach items="${listCategories}" var="cate">
 												<c:out
 													value="${cate.ctgCode == prod.ctgCode ? cate.ctgName : '' }"></c:out>
 											</c:forEach>
-										</c:if></td>
-									<td style="text-align: center;"><fmt:setLocale
-											value="en_US" /> <fmt:formatNumber
-											value="${prod.salesPrice}" type="currency" /></td>
-									<th style="text-align: center;"><a id="detail"
-										href="${rc.getContextPath()}/findOne/${prod.productCode}">Detail</a>
+										</c:if>
+									</td>
+									<td style="text-align: center;">
+										<fmt:setLocale value="en_US" /> 
+										<fmt:formatNumber value="${prod.salesPrice}" type="currency" /></td>
+									<th style="text-align: center;">
+										<a id="detail" href="${rc.getContextPath()}/findOne/${prod.productCode}">Detail</a>
 									</th>
 									<th style="text-align: center;">
-									
 										<c:choose>
 											<c:when test="${not empty listProductIdOrdered}">
-												<c:if test="${  fnc:contains( listProductIdOrdered, prod.productCode ) }"><a id="addToCart">Add To Cart</a>
-											</c:if>
+												<c:if test="${  fnc:contains( listProductIdOrdered, prod.productCode ) }">
+													<a id="addToCart" onclick="click_sub(${prod.productCode})">Add To Cart</a>
+												</c:if>
+												<c:if test="${  fnc:contains( listProductIdOrdered, prod.productCode ) eq false }">  
+													<span class="glyphicon glyphicon-ok"></span>
+												</c:if>
 											</c:when>
 											<c:otherwise>
-												<a id="addToCart">Add To Cart</a>
+												<a id="addToCart" onclick="click_sub(${prod.productCode})">Add To Cart</a>
 											</c:otherwise>
 										</c:choose>
 									</th>
@@ -109,7 +118,43 @@
 			    }
 	        ]
 	    });
+	    
+	    $("#filter").change(function(){
+	    	var value = $("#filter").val();
+	    	
+	    	$.ajax({
+	    		type: 'POST',
+    	        url : '${rc.getContextPath()}/filter',
+    	        data: {
+    	        	ctgCode: value
+    	        },
+    	        success : function(data) {
+    	        	if(data == 'index'){
+    	        		location.href = "${rc.getContextPath()}/"
+    	        	} else {
+    	        		location.href = "${rc.getContextPath()}/searchProduct/"+data
+    	        	}
+    	        }
+    	    })
+
+	    });
 	} );
+	
+	function click_sub(productCode){
+	    //$.form("${rc.getContextPath()}/showDetail?id=" + id).submit();
+	    $.post({
+	    	url: "${rc.getContextPath()}/addToCart",
+	        data: {
+	        	productCode: productCode
+	        },
+	        success: function(data){
+	            location.href = "${rc.getContextPath()}/"
+	        }
+	    });                 
+	}
+	
+	
+	
 </script>
 
 <script

@@ -20,9 +20,6 @@ public class ProductDaoImpl implements ProductDao {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
-	@Autowired
-	private CategoryDao categoryDao;
-	
 	public List<Product> getAllProducts() {
 		
 		String sql = "SELECT * FROM product";
@@ -68,6 +65,28 @@ public class ProductDaoImpl implements ProductDao {
 		        }
 		 
 		    });
+	}
+
+	@Override
+	public List<Product> getProductByCtgCode(String code) {
+		String sql = "SELECT * FROM product WHERE ctg_code ='" + code +"'";
+	    List<Product> listProducts = jdbcTemplate.query(sql, new RowMapper<Product>() {
+	    	
+	        public Product mapRow(ResultSet rs, int rowNum) throws SQLException {
+	        	Product p = new Product();
+	        	p.setProductCode(rs.getString("product_code"));
+	        	p.setProductName(rs.getString("product_name"));
+	        	p.setCtgCode(rs.getString("ctg_code"));
+	        	p.setSalesStartDate(rs.getString("sales_start_date"));
+	        	p.setSalesPrice(rs.getInt("sales_price"));
+	        	p.setCostPrice(rs.getInt("cost_price"));
+	        	p.setDiscountLimit(rs.getInt("discount_limit"));
+	 
+	            return p;
+	        }
+	 
+	    });
+		return listProducts;
 	}
 
 }

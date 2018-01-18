@@ -15,13 +15,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
-@PropertySource("classpath:db.properties")
 @ComponentScan("com.nissho.vn.*")
 @EnableTransactionManagement
 public class ApplicationContextConfig {
-	
-	@Autowired
-    private Environment env;
  
     @Bean
     public DataSource dataSource() {
